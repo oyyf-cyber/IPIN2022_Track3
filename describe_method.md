@@ -1,10 +1,9 @@
+    In terms of how we use the data, our approach consists of two phases: training and testing. In the training stage, the fingerprint is established, the model is trained and some information of the localization environment is extracted. In the test stage, the trained information and the fusion algorithm are used to form the final trajectory.
+    In terms of concrete steps, ours method is mainly divided into three modules: relative positioning, absolute positioning and fusion positioning.
+    The relative positioning gives the relative displacement of this period of time after the sensor information by the Pedestrian Dead Reckoning.Based on Radio Frequency Signals, Geomagnetic, Pressure and other sensor signals, we can calculate the absolute position.We can complete the calculation of absolute position based on the positioning fingerprint data (position information and sensor features) provided by other modules.The results of relative positioning and absolute positioning are fused to improve the accuracy of the position.
+    The overall process is shown in Figure 1:
+    
+    1.The relative positioning：Using the information obtained from the mobile phone sensor, the relative displacement of the mobile phone holder in a period of time relative to the original starting point is calculated. The relative displacement and coordinate trajectory data are generated based on PDR combined with ground points in log files. Using AppTimestamp as index, find other information corresponding to each location point, such as WIFI information, Bluetooth information and so on.
+    2.The absolute positioning: this part mainly builds the fingerprint feature map. Due to the large error of PDR trajectory, the PDR cannot be used as a location method directly. However, in the scoring trial, there is no ground punctuation, so we use the fingerprint map to get some absolute positions, and use these absolute positions to correct the PDR trajectory. At the same time, fingerprints can be used to judge which floor the position is on. In addition, through paper search, we found a very clever method to combine the trajectories of multiple mobile terminals and construct the feature map of the entire floor through the graph optimization method in SLAM. This method converts the fingerprint similarity based on WIFI and BLE4 into Euclidean distance in physical space by using multiple trajectories, and calculates the distance predicted by PDR on a single trajectory. Thus, a large graph is obtained, and the PDR trajectory is optimized by graph optimization method to improve the accuracy of feature map.
 
-
-![](https://github.com/oyyf-cyber/IPIN2022_Track3/blob/main/p1.jpg)
-
-
-
-
-
-
-Our approach consists of two phases: training and testing. In the training stage, the fingerprint is established, the model is trained and some information of the localization environment is extracted. In the test stage, the trained information and the fusion algorithm are used to form the final trajectory.
+    3. The fusion positioning:In this part, the results of relative positioning and absolute positioning are fused. The positions predicted by the feature map and PDR are respectively obtained. The two results are fused by the extended Kalman filter method to obtain relatively more accurate final positioning results.
